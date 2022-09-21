@@ -1,0 +1,83 @@
+<p>main works!</p>
+
+<table>
+    <tr>
+        <td>Комиссия</td>
+        <td> <input [(ngModel)]="this.marketConfig.brokerComissionPct" /> </td>
+    </tr>
+    <tr>
+        <td>Налог</td>
+        <td> <input [(ngModel)]="this.marketConfig.nalogPct" /> </td>
+    </tr>
+    <tr>
+        <td>Инфляция</td>
+        <td> <input [(ngModel)]="this.marketConfig.inflationPct" /> </td>
+    </tr>
+</table>
+
+
+<button (click)="load()">Load</button>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>SecID</th>
+            <th></th>
+            <th>Название</th>
+            <th>Номинал</th>
+            <th>Цена</th>
+            <th>Купон</th>
+            <th>Период выплат</th>
+
+            <th>Дата закрытия</th>
+            <th>Дата купона</th>
+
+            <th>купить</th>
+            <th>продать</th>
+
+
+            <th>Дхднсть</th>
+            <th>Доход год</th>
+            <th>Доход инфляц</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let bond of this.bonds">
+            <td>
+                {{bond.secId}}
+            </td>
+            <td>
+                <a target="_blank" href="https://www.tinkoff.ru/invest/bonds/{{bond.secId}}/">Ti</a> &nbsp;
+                <a target="_blank" href="https://www.moex.com/ru/issue.aspx?code={{bond.secId}}">Mx</a>&nbsp;
+                <a target="_blank" href="https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities/{{bond.secId}}.xml">X</a>&nbsp;
+            </td>
+            <td>{{bond.shortName}}</td>
+            <td>{{bond.nominalPrice |number:'1.2-2'}}</td>
+            <td>{{bond.priceLast |number:'1.2-2'}}</td>
+            <td>{{bond.couponValue | number:'1.2-2'}}</td>
+            <td>{{bond.couponPeriod}}</td>
+
+            <td>{{bond.endDate | date: 'yyyy-MM-dd'}}</td>
+            <td>{{bond.couponDate | date: 'yyyy-MM-dd'}}</td>
+
+            <td>{{bond.needToPay | number:'1.2-2'}}</td>
+            <td>{{bond.getAtTheEnd | number:'1.2-2'}}</td>
+
+
+            <td>{{bond.totalProfitPct | percent : '1.1-1' }}</td>
+            <td>{{bond.yearProfitPct | percent : '1.1-1'}}</td>
+
+
+            <td>{{bond.couponNKD}}</td>
+
+
+
+
+
+
+        </tr>
+    </tbody>
+
+</table>
