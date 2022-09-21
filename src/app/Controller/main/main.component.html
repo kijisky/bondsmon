@@ -1,4 +1,9 @@
-<p>main works!</p>
+<div>
+    <div id="chartDiv">
+        <canvas #chart baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'" (chartHover)="onChartHover($event)" (chartClick)="onChartClick($event)">
+</canvas>
+    </div>
+</div>
 
 <table>
     <tr>
@@ -17,66 +22,61 @@
 
 
 <button (click)="load()">Load</button>
+<button (click)="loadMoex()">Moex</button>
 
 <table border="1">
     <thead>
         <tr>
-            <th>SecID</th>
-            <th></th>
+            <th (click)="showSecID = !showSecID">SecID</th>
             <th>Название</th>
             <th>Номинал</th>
             <th>Цена</th>
             <th>Купон</th>
-            <th>Период выплат</th>
+            <th>Период</th>
 
-            <th>Дата закрытия</th>
-            <th>Дата купона</th>
+            <th>Закрытие</th>
+            <th>Купон</th>
 
             <th>купить</th>
             <th>продать</th>
 
 
-            <th>Дхднсть</th>
-            <th>Доход год</th>
+            <th>Доходность</th>
+            <th>Доход год (kiji)</th>
+            <th>Доход год (api)</th>
             <th>Доход инфляц</th>
+            <th>Объем</th>
         </tr>
 
     </thead>
 
     <tbody>
-        <tr *ngFor="let bond of this.bonds">
+        <tr *ngFor="let bond of this.bonds ; let indx = index" [ngClass]="{selected : indx == selectedIndex}">
             <td>
-                {{bond.secId}}
-            </td>
-            <td>
+                <span *ngIf="showSecID">{{bond.secId}}</span>
+                <span *ngIf="!showSecID">
                 <a target="_blank" href="https://www.tinkoff.ru/invest/bonds/{{bond.secId}}/">Ti</a> &nbsp;
                 <a target="_blank" href="https://www.moex.com/ru/issue.aspx?code={{bond.secId}}">Mx</a>&nbsp;
-                <a target="_blank" href="https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities/{{bond.secId}}.xml">X</a>&nbsp;
-            </td>
-            <td>{{bond.shortName}}</td>
-            <td>{{bond.nominalPrice |number:'1.2-2'}}</td>
-            <td>{{bond.priceLast |number:'1.2-2'}}</td>
-            <td>{{bond.couponValue | number:'1.2-2'}}</td>
-            <td>{{bond.couponPeriod}}</td>
+                <a target="_blank" href="https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities/{{bond.secId}}">X</a>&nbsp;
+            </span>
+                <td>{{bond.shortName}}</td>
+                <td>{{bond.nominalPrice |number:'1.2-2'}}</td>
+                <td>{{bond.priceLast |number:'1.2-2'}}</td>
+                <td>{{bond.couponValue | number:'1.2-2'}}</td>
+                <td>{{bond.couponPeriod}}</td>
 
-            <td>{{bond.endDate | date: 'yyyy-MM-dd'}}</td>
-            <td>{{bond.couponDate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{bond.endDate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{bond.couponDate | date: 'yyyy-MM-dd'}}</td>
 
-            <td>{{bond.needToPay | number:'1.2-2'}}</td>
-            <td>{{bond.getAtTheEnd | number:'1.2-2'}}</td>
-
-
-            <td>{{bond.totalProfitPct | percent : '1.1-1' }}</td>
-            <td>{{bond.yearProfitPct | percent : '1.1-1'}}</td>
+                <td>{{bond.needToPay | number:'1.2-2'}}</td>
+                <td>{{bond.getAtTheEnd | number:'1.2-2'}}</td>
 
 
-            <td>{{bond.couponNKD}}</td>
-
-
-
-
-
-
+                <td>{{bond.totalProfitPct | percent : '1.1-1' }}</td>
+                <td [ngClass]="{selectedCell : selectedParameter==0}">{{bond.yearProfitPct | percent : '1.1-1'}}</td>
+                <td [ngClass]="{selectedCell : selectedParameter==1}">{{bond.yield}}</td>
+                <td>{{bond.inflationProfitPct | percent : '1.1-1'}}</td>
+                <td [ngClass]="{selectedCell : selectedParameter==2}"> {{bond.value | number:'1.2-2'}}</td>
         </tr>
     </tbody>
 

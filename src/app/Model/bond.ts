@@ -15,7 +15,7 @@ export class Bond {
     marketCode: string;
 
     endDate: Date;
-    daysToEnd: number = 0;
+    duration: number = 0;
 
     price: number = 0;
     nominalPrice: number = 0;
@@ -38,6 +38,8 @@ export class Bond {
     margin: number = 0;
     totalProfitPct: number = 0;
     yearProfitPct: number = 0;
+    inflationProfitPct: number = 0;
+    yield: any;
 
     constructor(pJson: any, loader: BondLoader) {
         this.source = pJson;
@@ -65,7 +67,7 @@ export class Bond {
 
         this.systime = loader.GetData(pJson, "SYSTIME");
         this.nominalPrice = loader.GetData(pJson, "FACEVALUE");
-
+        //this.duration = loader.GetData(pJson, "DURATION");
 
 
         this.test = loader.GetData(pJson, "ACCRUEDINT");
@@ -82,24 +84,26 @@ export class Bond {
             this.priceOpen = this.priceOpenPct * this.nominalPrice / 100;
             this.priceOpen = Math.round(this.priceOpen * 100) / 100;
 
-            this.value = marketLoader.GetData(marketJson, "VALUE");
+            this.yield = marketLoader.GetData(marketJson, "YIELD");
+
+            this.value = marketLoader.GetData(marketJson, "VOLTODAY");
 
             var now: Date = new Date();
-            this.daysToEnd = Math.round((this.endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+            this.duration = Math.round((this.endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         }
         //this.CalculateParameters()
     }
 
     CalculateParameters(marketConfig: MarketConfig) {
         if (this.endDate) {
-            var couponsToGet = Math.round(this.daysToEnd / this.couponPeriod);
+            var couponsToGet = Math.floor(this.duration / this.couponPeriod) + 1;
             this.getAtTheEnd = this.nominalPrice + this.couponValue * couponsToGet;
             this.needToPay = this.priceLast + this.couponNKD;
             this.needToPay += this.needToPay * (marketConfig.brokerComissionPct / 100);/// Broker comission
-
             this.margin = this.getAtTheEnd - this.needToPay;
             this.totalProfitPct = this.margin / this.needToPay;
-            this.yearProfitPct = this.totalProfitPct / this.daysToEnd * 365;
+            this.yearProfitPct = (this.totalProfitPct / this.duration) * 365;
+            this.inflationProfitPct = this.yearProfitPct - (marketConfig.inflationPct / 100);
         }
     }
 

@@ -1,0 +1,17 @@
+#chartDiv {
+    display: block;
+    width: 50%;
+    height: 300px;
+}
+
+.selected {
+    background-color: yellow;
+}
+
+.selectedCell {
+    background-color: yellow;
+}
+
+td {
+    text-align: right;
+}

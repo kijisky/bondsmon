@@ -7,9 +7,11 @@ import { MarketConfig } from '../Model/market-config';
   providedIn: 'root'
 })
 export class ImoexService {
-  async GetBonds(): Promise<Bond[]> {
-    var url = "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?marketdata.columns=SECID,SHORTNAME,LAST,SYSTIME,VALUE&iss.meta=off&iss.only=marketdata";
-    url = "/assets/securities.json"
+  async GetBonds(url: string): Promise<Bond[]> {
+    if (!url) {
+      url = "https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?marketdata.columns=SECID,SHORTNAME,LAST,SYSTIME,VALUE&iss.meta=off&iss.only=marketdata";
+      url = "/assets/securities.json"
+    }
     var query = await fetch(url);
     var response = await query.json();
 
@@ -33,7 +35,7 @@ export class ImoexService {
       element.CalculateParameters(defaultMarketConfig);
     });
 
-    ans.sort((a, b) => a.daysToEnd - b.daysToEnd);
+    ans.sort((a, b) => a.duration - b.duration);
 
     return ans;
   }

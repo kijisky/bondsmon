@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-graph',
