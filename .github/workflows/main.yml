@@ -34,7 +34,7 @@ jobs:
           build_configuration: production # The build environment for the app. please look configurations in your angular.json
           base_href: /   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
           deploy_branch: gh-pages # The branch the action should deploy to.
-          angular_dist_build_folder: dist/bondsmonc 
+          angular_dist_build_folder: dist/bondmonc 
 
       # Runs a set of commands using the runners shell
       - name: End
